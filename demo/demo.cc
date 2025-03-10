@@ -3,7 +3,12 @@
 //2022/03/17
 #include <string>
 #include <iostream>
+#ifndef WIN32
 #include <unistd.h>
+#else
+#pragma comment(lib, "winmm.lib")
+#endif
+
 #include <iomanip>
 #include "api/echo_canceller3_factory.h"
 #include "api/echo_canceller3_config.h"

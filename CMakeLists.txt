@@ -5,14 +5,10 @@ set (AEC_VERSION_MAJOR 3)
 set (AEC_VERSION_MINOR 0)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
+
 #set(CMAKE_CXX_STANDARD 11)
 #set(CMAKE_C_STANDARD 11)
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -std=c++14 -O3 -fPIC -fopenmp -mcpu=cortex-a7 -ftree-vectorize -mfloat-abi=hard -mfpu=neon")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fPIC -pthread")
-#set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -std=c++14 -O3 -fPIC -fopenmp -mcpu=cortex-a7 -ftree-vectorize -mfloat-abi=hard -mfpu=neon")
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden -fPIC")
 #option(BUILD_STATIC_LIB "Building static lib" ON)
-
 
 if(NOT DEFINED SYSTEM_DETAILS)
   set(SYSTEM_DETAILS linux64)
@@ -21,12 +17,24 @@ set(CMAKE_SKIP_RPATH TRUE)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON) 
 set(CURRENT_CONFIG_FILE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 option(BUILD_STATIC_LIB "Building static lib" ON) 
-if(${CMAKE_BUILD_TYPE} STREQUAL debug)
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   set(BUILD_STATIC_LIB OFF)
   add_definitions(-DDEBUG)
 endif()
 
-add_definitions(-DWEBRTC_POSIX)
+if (WIN32)
+  add_definitions(-DWEBRTC_WIN)
+  add_definitions(-DNOMINMAX)
+  add_definitions(-DWIN32_LEAN_AND_MEAN)
+  add_definitions(-D_USE_MATH_DEFINES)
+else()
+  add_definitions(-DWEBRTC_POSIX)
+  #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -std=c++14 -O3 -fPIC -fopenmp -mcpu=cortex-a7 -ftree-vectorize -mfloat-abi=hard -mfpu=neon")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fPIC -pthread")
+  #set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -std=c++14 -O3 -fPIC -fopenmp -mcpu=cortex-a7 -ftree-vectorize -mfloat-abi=hard -mfpu=neon")
+  #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden -fPIC")
+endif()
 
 # should we use our own math functions?
 option (USE_AEC

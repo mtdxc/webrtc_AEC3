@@ -36,6 +36,7 @@ elif [ "$1" = "arm32-poky" ];then
 elif [ "$1" = "armeabi-v7a" ] || [ "$1" = "arm64-v8a" ];then
     CMAKE_OPTS="-DCMAKE_TOOLCHAIN_FILE=./cmake/$1-toolchain.cmake"
 fi
+
 PROJECT_NAME=aec_sample
 TARGET=$1
 if [ -n "$2" ] ;then
